@@ -1,0 +1,628 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=.75in, landscape]{geometry}
+\usepackage{multicol}
+\setlength{\columnsep}{.35in}
+\setlength{\columnseprule}{.5pt}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Math 128A (Holtz) Midterm Cheat Sheet, Fall 2016}
+\rhead{Harrison Bachrach}
+\chead{Page \thepage}
+
+%----------------------------------------------------------------------------------------
+%	ORGANIZATIONAL AND PRESENTATION FORMATTING
+%----------------------------------------------------------------------------------------
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage[dvipsnames]{xcolor} % Better color commands
+\usepackage[color=cyan!40, bordercolor={cyan!80!}]{todonotes} % Including TODO notes
+\usepackage{booktabs} % Better tables
+\usepackage{caption} % Make caption separators only appear when required
+
+%------------------------------------------------------------------------------
+% FORMATTING CODE
+%------------------------------------------------------------------------------
+\usepackage{courier} % For using the font Courier for code
+\usepackage{listings} % For displaying code from any language
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize\ttfamily,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+ 
+
+%------------------------------------------------------------------------------
+% FORMATTING MATH AND RELATED SHORTCUTS
+%------------------------------------------------------------------------------
+\usepackage{amsmath,amsfonts,amsthm,amssymb} % Math packages
+% \usepackage{ntheorem}
+	% \numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+	\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+	% \numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\usepackage{mathtools} % for coloneq mostly :)
+\usepackage{siunitx} % For formatting numbers with SI units
+\usepackage{physics}
+\usepackage{cancel} % For showing terms cancel
+
+\newcommand{\floor}[1]{\left \lfloor #1 \right \rfloor }
+\newcommand{\Integers}{\mathbb{Z}}
+\newcommand{\PosIntegers}{\mathbb{Z}^+}
+\newcommand{\Naturals}{\mathbb{N}}
+\newcommand{\Reals}{\mathbb{R}}
+\newcommand{\Rationals}{\mathbb{Q}}
+\newcommand{\Complex}{\mathbb{C}}
+\newcommand{\qeq}{\overset{?}{=}}
+\newcommand{\ol}[1]{\overline{#1}}
+\newcommand{\inv}[1]{#1^{-1}}
+\DeclareMathOperator{\im}{im}
+\newcommand{\ops}{\quad\text{ops.}}
+\newcommand{\keyword}[1]{\colorbox{cyan!20!}{#1}}
+\DeclareMathOperator{\fl}{fl}
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[subsection]
+\renewcommand{\thetheorem}{\arabic{theorem}}
+\theoremstyle{definition}
+\newtheorem{lemma}{Lemma}[subsection]
+\renewcommand{\thelemma}{\arabic{lemma}}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[subsection]
+\renewcommand{\thedefinition}{\arabic{definition}}
+\theoremstyle{definition}
+\newtheorem*{corollary}{Corollary}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\theoremstyle{remark}
+\newtheorem*{counterex}{Counterexample}
+\theoremstyle{definition}
+\newtheorem*{algorithm}{Algorithm}
+\theoremstyle{remark}
+\newtheorem*{formula}{Formula}
+\theoremstyle{remark}
+\newtheorem*{ednote}{Editor's Note}
+
+\usepackage{lipsum}
+
+\begin{document}
+\begin{multicols*}{3}
+
+\begin{ednote}
+	Some theorems and lemmas are not included as they were not covered in lecture
+	or homework. Developed from \textit{Analysis of Numerical Methods} by
+	Isaacson and Keller as well as notes based off of the notes of Prof. Olga
+	Holtz of UC Berkeley. All content is copyright of its respective author(s).
+\end{ednote}
+\section{Norms, Arithmetic, and Well-Posed Computations}
+\subsection{Norms of Vectors and Matrices}
+\begin{theorem}
+	For any square matrix $A$ of order $n$ there exists a non-singular matrix $P$,
+	of order $n$, such that
+	\[
+		B = \inv{P} A P
+	\]
+	is upper triangular and has the eigenvalues of $A$, say $\lambda_j \coloneqq
+	\lambda_j(A), j = 1, 2, \ldots, n$, on the principal diagonal.
+
+\end{theorem}
+\begin{remark}
+	The above theorem can also be stated as: Any matrix $A$ of order $n$ is
+	similar to an upper-triangular matrix $B$.
+\end{remark}
+\begin{definition}
+	A map $\norm{\cdot} : \mathcal{V} \to \Reals$ (also denoted as $N$) is a
+	\keyword{vector norm} if it satisfies all of the following properties:
+	\begin{enumerate}[label={(\roman*)}]
+		\item $\norm{\vb{x}} \geq 0$ for all $\vb{x} \in \mathcal{V}$ and
+			$\norm{\vb{x}} = 0$ iff $\vb{x} = \vb{0}$.
+		\item $\norm{\lapha \vb{x}}$ = $\abs{\alpha}\cdot \norm{\vb{x}}$ for all 
+			scalars $\alpha$ and all $\vb{x} \in \mathcal{V}$.
+		\item $\norm{\vb{x} + \vb{y}} \leq \norm{\vb{x}} + \norm{\vb{y}}$ for all
+			$\vb{x},\vb{y} \in \mathcal{V}$ (The triangle inequality).
+	\end{enumerate}
+\end{definition}
+\begin{definition}
+	The \keyword{$p$-norm} of a vector $\vb{x}$ is defined as 
+	\[
+		\norm{\vb{x}}_p \coloneqq \pqty{\sum_{i=1}^n \abs{x_i}^p}^{1/p} \qquad p \geq 1
+	\]
+	where $x_i$ are the entries of $\vb{x}$.
+\end{definition}
+\begin{remark}
+	Note that the case of $p=2$ is known as the \textit{Euclidean norm}.
+\end{remark}
+\begin{remark}
+	Note that the case of $p\to\infty$, the norm is the same as
+	\[
+		\norm{\vb{x}}_\infty = \max_i \abs{x_i}
+	\]
+\end{remark}
+\begin{lemma}\label{lem:norm_cont_func}
+	Every vector norm $N(\vb{x})$ is a continuous function of the components of
+	$\vb{x}$.
+\end{lemma}
+\begin{theorem}\label{thm:norm_eqiv}
+	For each pair of vector norms $N(\vb{x})$ and $N'(\vb{x})$, there exist
+	positive constants $m$ and $M$ such that for all $\vb{x} \in \Complex^n$
+	\[
+		mN'(\vb{x}) \leq N(\vb{x}) \leq MN'(\vb{x})
+	\]
+\end{theorem}
+\begin{definition}
+	A \keyword{matrix norm} is a map $\norm{\cdot} : \mathcal{M} \to \Reals$ that
+	satisfies the conditions (i)--(iii) from the definition of vector norm and
+	also satisfies 
+	\begin{enumerate}[label={(\roman*)}, start=4]
+		\item $\norm{AB} \leq \norm{A} \cdot \norm{B}$
+	\end{enumerate}
+	for any (square) matrices of order $n$.
+\end{definition}
+\begin{definition}
+	The \keyword{induced norm} (also known the a natural norm) for a given vector
+	norm is defined thusly: if $\norm{\cdot}$ is a vector norm, the induced norm
+	for a matrix $A$ is
+	\[
+		\norm{A} \coloneqq \sup_{\vb{x}\neq \vb{0}} \frac{\norm{A\vb{x}}}{\norm{\vb{x}}}
+	\]
+	or, equivalently,
+	\[
+		\norm{A} \coloneqq \max_{\norm{\vb{u}}=1} \norm{A\vb{u}}.
+	\]
+\end{definition}
+\begin{remark}
+	Note that this implies 
+	\begin{enumerate}[label={(\Alph*)}]
+		\item $\norm{A}_\infty$ is the maximum absolute row sum and
+		\item $\norm{A}_1$ is the maximum absolute column sum.
+	\end{enumerate}
+\end{remark}
+\begin{definition}
+	The \keyword{spectral radius} of any square matrix $A$ is
+	\[
+		\rho(A) \coloneqq \max_s \abs{\lambda_s(A)}
+	\]
+	where $\lambda_s$ is the $s$th eigenvalue of $A$.
+\end{definition}
+\begin{remark}
+	Lemma~\ref{lem:norm_cont_func} and Theorem~\ref{thm:norm_eqiv} also apply
+	identically to matrix norms.
+\end{remark}
+\begin{lemma}
+	For any induced norm $\norm{\cdot}$ and square matrix $A$, 
+	\[
+		\rho(A) \leq \norm{A}
+	\]
+\end{lemma}
+\begin{theorem}
+	For each $n$th order matrix $A$ and arbitrary $\epsilon > 0$, an induced norm
+	$\norm{\cdot}$ can be found such that
+	\[
+		\rho(A) \leq \norm{A} \leq \rho(A) + \epsilon
+	\]
+\end{theorem}
+\begin{definition}
+	A matrix $A$ for which
+	\[
+		\lim_{m\to\infty} A^m = 0
+	\]
+	is said to be \keyword{convergent}.
+\end{definition}
+\begin{theorem}
+	The following three statements are equivalent:
+	\begin{enumerate}[label={(\alph*)}]
+		\item $A$ is convergent
+		\item $\lim_{m \to \infty} \norm{A^m} = 0$ for some matrix norm
+		\item $\rho(A) < 1$
+	\end{enumerate}
+\end{theorem}
+\begin{corollary}
+	The matrix $A$ is convergent if for some matrix norm 
+	\[
+		\norm{A} < 1
+	\]
+\end{corollary}
+\begin{theorem}
+	\begin{enumerate}[label={(\alph*)}]
+		\item
+			The geometric series
+			\[
+				I + A + A^2 + A^3 + \cdots,
+			\]
+			converges iff $A$ is convergent.
+		\item
+			If $A$ is convergent, then $I - A$ is non-singular and
+			\[
+				\inv{(I - A)} = I + A + A^2 + A^3 + \cdots
+			\]
+	\end{enumerate}
+\end{theorem}
+\begin{corollary}
+	If for some natural norm $\norm{A} < 1$, then $I - A$ is non singular and
+	\[
+		\frac{1}{1 + \norm{A}} \leq \norm{\inv{(I - A)}} \leq \frac{1}{1 - \norm{A}}
+	\]
+\end{corollary}
+\subsection{Floating-Point Arithmetic and Rounding Errors}
+\begin{definition}
+	If the number $a \neq 0$ has the exact decimal representation
+	\[
+		a = \pm 10^q(.d_1 d_2 \cdots)
+	\]
+	then the \keyword{$t$-digit floating decimal representation} of $a$ is 
+	\[
+		\fl(a) \coloneqq \pm 10^q(.\delta_1 \delta_2 \cdots \delta_t)
+	\]
+\end{definition}
+\begin{remark}
+	In the previous definition, $(.\delta_1 \delta_2 \cdots \delta_t)$ and $q$
+	are known as the \textit{mantissa} and \textit{exponent} of $\fl(a)$,
+	respectively. The exponent $q$ is generally bounded by $-N$ and $M$ where
+	$N$ and $M$ are large positive integers determined by the machine.
+\end{remark}
+\begin{lemma}
+	The error in $t$-digit floating decimal representation of a number $a\neq 0$
+	is bounded:
+	\[
+		\abs{a - \fl(a)} \leq K \abs{a} 10^{-t}
+	\]
+	where
+	\[
+		K = 
+		\begin{cases*}
+			5 & (rounding) \\
+			10 & (chopping)
+		\end{cases*}
+	\]
+\end{lemma}
+\begin{algorithm}[Floating-point addition]
+	If adding two numbers, each at $t$-digit decimal precision, the smaller of
+	the two numbers is shifted so that the exponent of the two numbers are the
+	same (with the extra precision rounded or truncated). The
+	mantissa of the numbers are then summed and either rounded or chopped.
+\end{algorithm}
+\begin{definition}
+	\keyword{Guard digits} are extra digits used to increase the accuracy of
+	subtractions: if subtracting one number of $t$-digit decimal precisision from
+	another and using $s$ guard digits, the computer would shift and subtact as
+	though it were using $(t+s)$-digit decimal precision, and then round to
+	$t$-digit decimal precision.
+\end{definition}
+\subsection{Well-Posed Computations}
+\begin{definition}
+	A function $f$ is \keyword{Lipschitz continuous} if there exists
+	a constant $M$ such that for any $x$ and $y$
+	\[
+		\abs{f(x) - f(y)} \leq M\abs{x - y}
+	\]
+\end{definition}
+\begin{remark}
+	If $f$ is differentiable on the interval $[x,y]$, then we can take
+	\[
+		M = \sup_{\xi \in [x, y]} \abs{f'(\xi)}
+	\]
+\end{remark}
+\begin{definition}
+	A problem (e.g.\ $A\vb{x} = \vb{f}$) is \keyword{well-posed} if it satisfies
+	all of the following:
+	\begin{enumerate}[label={(\alph*)}]
+		\item It has a solution (in the example, $x$) for every input (in the
+			example, $f$).
+		\item The solution is unique.
+		\item The solution depends Lipschitz continuously on the input.
+
+	\end{enumerate}
+\end{definition}
+\section{Numerical Solution of Linear Systems and Matrix Inversion}
+\subsection{Gaussian Elimination}
+\begin{definition}
+	If $A$ is \keyword{non-singular}, then a solution $\vb{x}$ to the equation
+	$A\vb{x} = \vb{f}$ exists and is unique for any $\vb{f}$. If $A$ is
+	\keyword{singular}, then the solution $\vb{x}$ may not exist or be unique.
+\end{definition}
+\begin{algorithm}[Gaussian Elimination/LU Decomposition]\label{alg:GE}
+	Consider the problem $A\vb{x} = \vb{f}$ where $A$ is an $n \times n$ matrix
+	and $\vb{x}$ and $\vb{f}$ both have $n$ entries. Consider the subproblem
+	$A^{(k-1)}\vb{x} = \vb{f}^{(k-1)}$ where $A^{(k-1)}$ is both upper triangular and has
+	non-zero diagonal elements for its first $k-1$ rows. We define $A^{(1)} \coloneqq
+	A$ and $\vb{f}^{(1)} \coloneqq \vb{f}$. If we denote the entries of
+	$A^{(k)}$ and $\vb{f}^{(k)}$ as $a_{ij}^{(k)}$ and $f_i^{(k)}$ respectively,
+	then we may generate them with the following method:
+	\[
+		a_{ij}^{(k)} = 
+		\begin{cases*}
+			a_{ij}^{(k-1)} & for $i \leq k - 1$ \\
+			0 & for $i \leq k, j \leq k -1$ \\
+			a_{ij}^{(k-1)} - \frac{a_{i, k-1}^{(k-1)}}{a_{k-1, k-1}^{(k-1)}} a_{k-1,j}^{(k-1)} & for $i \geq k, j \geq k$
+		\end{cases*}
+	\]
+	\[
+		f_i^{(k)} = 
+		\begin{cases*}
+			f_i^{(k-1)} & for $i \leq k-1$ \\
+			f_i^{(k-1)} - \frac{a_{i, k-1}^{(k-1)}}{a_{k-1, k-1}^{(k-1)}} f_{k-1}^{(k-1)} & for $i \geq k$
+		\end{cases*}
+	\]
+	Performing this method recursively, with $k=1,\ldots, n$, yields a new system
+	that can be solved with simple backsubstitution (described further on). 
+\end{algorithm}
+\begin{remark}
+	A more intuitive way to look at the previous algorithm is in the row
+	perspective: to generate $A^{(k)}$ from $A^{(k-1)}$, for each row $i \geq k$,
+	simply subtract the $(k-1)$th row, scaled such that the $(k-1)$th column is
+	eliminated for those rows. The same corresponding operations are performed
+	to generate $\vb{f}^{(k)}$.
+\end{remark}
+\begin{theorem}
+	Let the matrix $A$ be such that the Gaussian elimination procedure defined in
+	the Algorithm for Gaussian elimination yields non-zero diagonal elements
+	$a_{kk}^{(k)}, k = 1, \dots, n$. Then $A$ is non-singular and in fact,
+	\[
+		\det A = a_{11}^{(1)}a_{22}^{(2)} \cdots a_{nn}^{(n)}.
+	\]
+	The final matrix $A^{(n)} \eqqcolon U$ is upper triangular and $A$ has the
+	factorization
+	\[
+		LU = A
+	\]
+	where $L \coloneqq (m_{ik})$ is lower triangular with the elements
+	\[
+		m_{ik} =
+		\begin{cases*}
+			0 & for $i < k$ \\
+			1 & for $i = k$ \\
+			a_{ik}^{k} / a_{kk}^{(k)} & for $i > k$.
+		\end{cases*}
+	\]
+	and the final vector $\vb{f}^{(n)} \eqqcolon \vb{g}$ is 
+	\[
+		\vb{g} = \inv{L} \vb{f}
+	\]
+\end{theorem}
+\begin{algorithm}[Backsubstitution]
+	If we define $(u_{ij}) \coloneqq U$ where $U$ is an upper triangular matrix
+	with its diagonal elements as non-zero, then we can solve the equation
+	$U\vb{x} = \vb{g}$ with the equations
+	\begin{align*}
+		x_n &= \frac{1}{u_{nn}}g_n \\
+		x_i &= \frac{1}{u_{ii}}\pqty{g_i - \sum_{j = i + 1}^n u_{ij}x_j},~i = n-1, \ldots, 1.
+	\end{align*}
+\end{algorithm}
+\subsubsection{Operational Counts}
+\begin{definition}
+The \keyword{arithmetic complexity} of an algorithm is the total number of
+additions, subtractions, multiplications and divisions that occur while
+performing it. The \keyword{multiplicative complexity} of algorithm is the
+total number of multiplications and divisions that occur while performing it.
+\end{definition}
+\begin{remark}
+To solve the $m$ systems
+\[
+	A\vb{x} = \vb{f}(j), \qquad j = 1,\ldots, m
+\]
+with arbitrary $\vb{f}(j)$ it is \emph{always} more efficient to solve them
+by Gaussian elimination than to calculate $\inv{A}$.
+\end{remark}
+\begin{formula}
+	\[
+		\sum_{i=1}^n i = \frac{n(n+1)}{2} \quad \sum_{i=1}^n i^2 =
+		\frac{n(n+1)(2n+1)}{6}
+	\]
+\end{formula}
+\begin{lemma}
+	Solving the $m$ systems
+\[
+	A\vb{x} = \vb{f}(j), \qquad j = 1,\ldots, m
+\]
+has a \emph{multiplicative} complexity of 
+\[
+	\frac{n^3}{3} + mn^2 - \frac{n}{3} \ops
+\]
+\end{lemma}
+\begin{lemma}
+	There is a required multiplicative complexity of
+	\[
+		n^3 \ops
+	\]
+	to computing $\inv{A}$.
+\end{lemma}
+\subsubsection{A Priori Error Estimates; Condition Number}
+\begin{definition}
+	The \keyword{condition number} $\mu$ is defined as
+	\[
+		\mu = \mu(A) \coloneqq \norm{\inv{A}} \cdot \norm{A}
+	\]
+\end{definition}
+\begin{theorem}
+	Consider solving the perturbed equation
+	\[
+		(A + \delta A)(\vb{x} + \vb{\delta x}) = \vb{f} + \vb{\delta f}
+	\]
+	where $A\vb{x} = \vb{f}$, $A$ is non-singular, and $\delta A$ is so small
+	that
+	\[
+		\norm{\delta A} < 1 / \norm{\inv{A}}.
+	\]
+	If $\vb{x}$ and $\vb{\delta x}$ satisfy the perturbed and unperturbed
+	equations, then 
+	\[
+		\frac{\norm{\vb{\delta \vb{x}}}}{\norm{\vb{x}}} \leq \bqty{\frac{\mu}{1 - \mu
+		\norm{\delta A}/\norm{A}}} \pqty{\frac{\norm{\vb{\delta f}}}{\norm{\vb{f}}}
+		+ \frac{\norm{\delta A}}{\norm{A}}}
+	\]
+\end{theorem}
+\begin{remark}
+	The previous theorem basically states that as long as the bracketed term is
+	not too large, small relative changes in $\vb{f}$ and $A$ only yield small
+	relative changes in $\vb{x}$.
+\end{remark}
+\begin{lemma}
+	If $A$ is non-singular and $t$ sufficiently large, then the Gaussian
+	elimination method, with maximal pivots and floating-point arithmetic (with
+	$t$-digit mantissas), yields multipliers $s_{ij}$ with $\abs{s_{ij}} \leq 1$
+	and pivots $b_{jj}^{(j)} \neq 0$, where $b_{ij}^{(k)}$ and $s_{ij}$ are
+	defined in the book. (Sorry! Wouldn't fit in the template.)
+\end{lemma}
+\subsubsection{A Posteriori Error Estimates}
+\begin{theorem}
+	Let $C$ be a computed or approximate inverse of the matrix $A$. If we define
+	the error in the inverse as
+	\[
+		F \coloneqq C - \inv{A}
+	\]
+	and the \keyword{residual matrix} as
+	\[
+		R \coloneqq AC - I,
+	\]
+	then, given $\norm{R}	< 1$, all of the following statements are true:
+	\begin{enumerate}[label={(\alph*)}]
+	\item $A$ and $C$ are non-singular
+	\item $\norm{\inv{A}} \leq \norm{C} / (1 - \norm{R})$
+	\item $\norm{F} \leq \norm{C} \cdot \norm{R}/(1 - \norm{R})$
+	\end{enumerate}
+\end{theorem}
+\begin{corollary}
+	Under the same conditions as the previous theorem, 
+	\begin{enumerate}[label={(\alph*)}, start=4]
+		\item $\norm{\inv{C}} \leq \norm{A} / (1 - \norm{R})$
+		\item $\norm{A - \inv{C}} \leq \norm{A} \cdot \norm{R}(1 - \norm{R})$
+	\end{enumerate}
+\end{corollary}
+\section{Iterative Solutions of Non-Linear Equations}
+\begin{definition}
+	A \keyword{fixed point} of a function $g$ is a value $\alpha$ such that
+	\[
+		\alpha = g(\alpha)
+	\]
+\end{definition}
+\begin{definition}
+	A mapping $g: D \to D$ is \keyword{contracting} if
+	\[
+		\norm{g(x) - g(y)} \leq M \norm{x - y}	
+	\]
+	for all $x, y \in D$ where $M < 1$ provided $D$ is closed and bounded (e.g.\
+	an interval on $\Reals$) or $D$ is the entire domain and range of $g$.
+\end{definition}
+\subsection{Functional Iteration for a Single Equation}
+\begin{theorem}
+	If $g$ satisfies the Lipschitz condition 
+	\[
+		\abs{g(x) - g(y)} \leq \lambda \abs{x - y}
+	\]
+	for all $x,y$ in the interval $I \coloneqq [x_0 - \rho, x_0 + \rho]$ such
+	that $0 \leq \lambda < 1$ and initial guess $x_0$ be such that
+	\[
+		\abs{x_0 - g(x_0)} \leq (1-\lambda)\rho, \tag{\ast}
+	\]
+	then all of the following are true:
+	\begin{enumerate}[label={(\roman*)}]
+		\item all iterates $x_\nu$ defined by $x_{\nu + 1} \coloneqq g(x_\nu)$, 
+			lie within the interval $I$
+		\item (Existence) the iterates converge to some point
+			\[
+				\lim_{\nu \to \infty} x_\nu = \alpha
+			\]
+			which is a root of $x - g(x) = 0$.
+		\item (Uniqueness) $\alpha$ is the only root in $I$.
+	\end{enumerate}
+\end{theorem}
+\begin{corollary}
+	If $\abs{g'(x)} \leq \lambda < 1$ for $x \in I$ and $(\ast)$ is still
+	satisfied, then all of the conclusions of the previous theorem still hold.
+\end{corollary}
+\subsubsection{Error Propagation}
+\begin{theorem}
+	If $x = g(x)$ has a root at $x = \alpha$ and in the interval $I \coloneqq
+	(\alpha - \rho, \alpha + \rho)$ $g(x)$ satisfies
+	\[
+		\abs{g(x) - g(\alpha)} \leq \lambda \abs{x - \alpha} \tag{\ast \ast}
+	\]
+	with $\lambda < 1$, then for any $x_0$ in the interval $I$, all 
+	\begin{enumerate}[label={(\roman*)}]
+		\item all iterates $x_\nu$ defined by $x_{\nu + 1} \coloneqq g(x_\nu)$, 
+			lie within the interval $I$
+		\item the iterates $x_\nu$ converge to $\alpha$
+		\item $\alpha$ is the only root in $I$.
+	\end{enumerate}
+\end{theorem}
+\begin{corollary}
+	If $\abs{g'(x)} \leq \lambda < 1$ for $x \in I$ and $(\ast \ast)$ is still
+	satisfied, then all of the conclusions of the previous theorem still hold.
+\end{corollary}
+\begin{theorem}
+	Let $x = g(x)$ satisfy the conditions of the previous theorem and let $X_{\nu
+	+ 1} \coloneqq g(X_\nu) + \delta_\nu$ (where $\delta_\nu$ is an error term
+	small enough that $\delta_\nu < \delta$ for all $\nu$ for some fixed $\delta$).
+	Let $X_0$ be any point in the interval 
+	\[
+	\abs{\alpha - x} \leq \rho_0
+\]
+	where
+	\[
+		0 < \rho_0 \leq \rho - \frac{\delta}{1 - \lambda}.
+	\]
+	Then the iterates $X_\nu$  lie in the interval
+	\[
+		\abs{\alpha - X_\nu} \leq \rho
+	\]
+	and
+	\[
+		\abs{\alpha - X_k} \leq \frac{\delta}{1 - \lambda} + \lambda^k \pqty{\rho_0 - \frac{\delta}{1 - \lambda}}
+	\]
+	where $\lambda^k \to 0$ as $\k \to \infty$.
+\subsection{Second and Higher Order Iteration Methods}
+\begin{definition}
+	Consider the Taylor series expansion of a function $g$ at a fixed point
+	$\alpha$: 
+	\[
+		\begin{split}
+			g(x) = \alpha &+ g'(\alpha)(x - \alpha) + \frac{g''(\alpha)}{2} (x-\alpha)^2
+		+ \cdots \\
+		&+ \frac{g^{(k)}(\alpha)}{k!} (x-\alpha)^k + \cdots
+		\end{split}
+	\]
+If $k$ is the lowest positive integer such that $g^{(k)}(\alpha) \neq 0$, then
+the function has an \keyword{order of convergence} of $k$. When $k=1$ or $k=2$,
+the convergence is ``linear'' and ``quadratic,'' respectively.
+\end{definition}
+\begin{algorithm}[Chord Method]
+	Suppose we're trying to find a root of $f(x)$ which we will denote $\alpha$.
+	The iterative scheme
+	\[
+		x_{\nu+1} = x_\nu -mf(x_\nu)
+	\]
+	will, assuming $m$ is chosen such that $0 < mf'(\alpha) < 2$, converge to the
+	root linearly.
+\end{algorithm}
+\begin{algorithm}[Newton's Method]
+	Suppose we're trying to find a root of $f(x)$ which we will denote $\alpha$.
+	The iterative scheme
+	\[
+		x_{\nu+1} = x_\nu - \frac{f(x_\nu)}{f'(x_\nu)}
+	\]
+	will converge to the root quadratically, assuming $f'(\alpha) \neq 0$ or
+	that the root $x = \alpha$ has a multiplicity of one.
+\end{algorithm}
+\end{multicols*}
+
+\end{document}
