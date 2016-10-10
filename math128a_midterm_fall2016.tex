@@ -1,7 +1,7 @@
 \documentclass[11pt,letterpaper]{article}
 \usepackage[english]{babel}
 \usepackage[utf8]{inputenc}
-\usepackage[margin=.75in, landscape]{geometry}
+\usepackage[margin=.50in, top=.75in, landscape]{geometry}
 \usepackage{multicol}
 \setlength{\columnsep}{.35in}
 \setlength{\columnseprule}{.5pt}
@@ -111,7 +111,7 @@
 \begin{ednote}
 	Some theorems and lemmas are not included as they were not covered in lecture
 	or homework. Developed from \textit{Analysis of Numerical Methods} by
-	Isaacson and Keller as well as notes based off of the notes of Prof. Olga
+	Isaacson and Keller as well as notes based off of the lectures of Prof. Olga
 	Holtz of UC Berkeley. All content is copyright of its respective author(s).
 \end{ednote}
 \section{Norms, Arithmetic, and Well-Posed Computations}
@@ -408,6 +408,35 @@
 		x_i &= \frac{1}{u_{ii}}\pqty{g_i - \sum_{j = i + 1}^n u_{ij}x_j},~i = n-1, \ldots, 1.
 	\end{align*}
 \end{algorithm}
+\begin{theorem}
+	Let the matrix $A$ have rank $r$. Then we can find a sequence of distinct row
+	and column indices $(i_1, j_1), \ldots, (i_r, j_r)$ such that the
+	corresponding pivot elements in $A^{(1)}, \ldots, A^{(r)}$ are non-zero and
+	$a_{ij}^{(r)} = 0$ if $i \neq i_1, \ldots, i_r$. Let us define the
+	permutation matrices, whose columns are unit vectors:
+	\begin{align*}
+		P &\coloneqq \pqty{\vb{e}^{(i_1)}, \vb{e}^{(i_2)}, \ldots, \vb{e}^{(i_r)}, \ldots, \vb{e}^{(i_n)}} \\
+		Q &\coloneqq \pqty{\vb{e}^{(j_1)}, \vb{e}^{(j_2)}, \ldots, \vb{e}^{(j_r)}, \ldots, \vb{e}^{(j_n)}}
+	\end{align*}
+	where $i_k, j_k$, for $1 \leq k \leq r$, are the indices of the pivots
+	and the sets $\Bqty{i_k}$ and $\Bqty{j_k}$ are permutations of $1,2,\ldots n$.
+	Then the system
+	\[
+		B\vb{y} = \vb{g}
+	\]
+	where
+	\[
+		B \coloneqq P^T A Q, \qquad \vb{y} \coloneqq Q^T \vb{x} \qquad \vb{g} \coloneqq P^T \vb{f}
+	\]
+	can be solved Gaussian elimination with the natural order of pivots $(1,1),
+	(2,2), \ldots, (r,r)$.
+\end{theorem}
+\begin{definition}
+	\keyword{Partial pivoting} is the swapping of rows in order to place the
+	largest elements (by absolute value) along the diagonal. \keyword{Complete
+	pivoting} or maximal pivoting is the swapping of both rows and columns for
+	the same purpose.
+\end{definition}
 \subsubsection{Operational Counts}
 \begin{definition}
 The \keyword{arithmetic complexity} of an algorithm is the total number of
