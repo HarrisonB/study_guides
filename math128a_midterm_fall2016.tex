@@ -85,6 +85,8 @@
 \newtheorem{theorem}{Theorem}[subsection]
 \renewcommand{\thetheorem}{\arabic{theorem}}
 \theoremstyle{definition}
+\newtheorem*{theorem*}{Theorem}
+\theoremstyle{definition}
 \newtheorem{lemma}{Lemma}[subsection]
 \renewcommand{\thelemma}{\arabic{lemma}}
 \theoremstyle{definition}
@@ -552,6 +554,28 @@ has a \emph{multiplicative} complexity of
 	for all $x, y \in D$ where $M < 1$ provided $D$ is closed and bounded (e.g.\
 	an interval on $\Reals$) or $D$ is the entire domain and range of $g$.
 \end{definition}
+\begin{definition}
+	A \keyword{Cauchy sequence} is a sequence $(a_k)$ such that for any $l \in
+	\Naturals$,
+	\[
+		\lim_{k\to\infty} \norm{a_k - a_{k+l}} = 0.
+	\]
+\end{definition}
+\begin{theorem*}[Banach fixed-point theorem]
+	Suppose $\mathcal{V}$ is a vector space equipped with a norm $\norm{\cdot}$ and is
+	\textit{complete}, that is, the limit of any Cauchy sequence of its elements
+	is also in $\mathcal{V}$. Then, given that $g: \mathcal{V} \to \mathcal{V}$ is
+	a mapping which is contracting, then there exists a unique fixed point
+	$\alpha \in \mathcal{V}$ (such that $g(\alpha) = \alpha$ which is the limit
+	of the sequence $(x_n)$, defined by $x_{n+1} \coloneqq g(x_n)$, as $n \to
+	\infty$.
+\end{theorem*}
+\begin{theorem*}[Brouwer fixed-point theorem]
+	Let $f : D \to D$ where $D$ is simultaneously \emph{closed}, \emph{bounded}, and
+	\emph{convex} (i.e.\ a straight line segment connecting two points in $D$ is
+	entirely contained in $D$). Then there exists at least one fixed point
+	$\alpha \in D$ such that $f(\alpha) = \alpha$.
+\end{theorem*}
 \subsection{Functional Iteration for a Single Equation}
 \begin{theorem}
 	If $g$ satisfies the Lipschitz condition 
@@ -598,6 +622,31 @@ has a \emph{multiplicative} complexity of
 	If $\abs{g'(x)} \leq \lambda < 1$ for $x \in I$ and $(\ast \ast)$ is still
 	satisfied, then all of the conclusions of the previous theorem still hold.
 \end{corollary}
+\begin{definition}
+	Suppose $g$ has a fixed point at $x = \alpha$. Let
+	\[
+		\hat{\lambda} \coloneqq \abs{g'(\alpha)}
+	\]
+	be called the (asymptotic) \keyword{convergence factor}. We assume that $\hat{\lambda}
+	\neq 0$.
+\end{definition}
+\begin{definition}
+	Given the previous definition and the condition $\hat{\lambda} < 1$, then we
+	may define
+	\[
+		R \coloneqq \log \frac{1}{\hat{\lambda}}
+	\]
+	as the \keyword{rate of convergence}.
+\end{definition}
+\begin{remark}
+	The number of additional iterations required to reduce the error at the $k$th
+	step by the factor $10^{-m}$ is, asymptotically,
+	\[
+		\nu = \frac{m}{R}.
+	\]
+	Note that this remark and the previous two definitions only apply to
+	\emph{first order methods}. See the next section for higher order methods.
+\end{remark}
 \begin{theorem}
 	Let $x = g(x)$ satisfy the conditions of the previous theorem and let $X_{\nu
 	+ 1} \coloneqq g(X_\nu) + \delta_\nu$ (where $\delta_\nu$ is an error term
