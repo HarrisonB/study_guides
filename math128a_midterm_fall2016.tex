@@ -300,15 +300,15 @@
 \begin{algorithm}[Floating-point addition]
 	If adding two numbers, each at $t$-digit decimal precision, the smaller of
 	the two numbers is shifted so that the exponent of the two numbers are the
-	same (with the extra precision rounded or truncated). The
-	mantissa of the numbers are then summed and either rounded or chopped.
+	same. The mantissa of the numbers are then summed and either rounded or
+	chopped.
 \end{algorithm}
 \begin{definition}
 	\keyword{Guard digits} are extra digits used to increase the accuracy of
-	subtractions: if subtracting one number of $t$-digit decimal precisision from
-	another and using $s$ guard digits, the computer would shift and subtact as
-	though it were using $(t+s)$-digit decimal precision, and then round to
-	$t$-digit decimal precision.
+	subtractions when doing operations on computers: if subtracting one number of
+	$t$-digit decimal precisision from another and using $s$ guard digits, the
+	computer would shift and subtact as though it were using $(t+s)$-digit
+	decimal precision, and then round to $t$-digit decimal precision.
 \end{definition}
 \subsection{Well-Posed Computations}
 \begin{definition}
